@@ -1,4 +1,4 @@
-package com.autosur.models;
+package main.java.com.autosur.models;
 
 public class Task {
     public enum Status {
