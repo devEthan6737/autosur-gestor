@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="CENTER" spacing="15.0" prefWidth="420.0" prefHeight="340.0" 
+      styleClass="root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://fxml.com/fxml/1" 
+      fx:controller="com.autosur.controllers.LoginController">
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+    
+    <Label text="AUTOSUR" styleClass="title-label"/>
+    <Label text="Gestión Digital de Taller" style="-fx-font-size: 12px; -fx-text-fill: #bdc3c7;"/>
+    
+    <VBox spacing="5.0" alignment="CENTER_LEFT">
+        <Label text="Usuario:"/>
+        <TextField fx:id="txtUsername" promptText="Introduce tu usuario" maxWidth="Infinity"/>
+    </VBox>
+    
+    <VBox spacing="5.0" alignment="CENTER_LEFT">
+        <Label text="Contraseña:"/>
+        <PasswordField fx:id="txtPassword" promptText="Introduce tu contraseña" maxWidth="Infinity"/>
+    </VBox>
+    
+    <Button fx:id="btnLogin" text="Iniciar Sesión" onAction="#handleLogin" prefWidth="150.0" style="-fx-margin-top: 10px;"/>
+    
+    <Label fx:id="lblError" text="" textFill="#e74c3c" style="-fx-font-weight: bold;"/>
+</VBox>
