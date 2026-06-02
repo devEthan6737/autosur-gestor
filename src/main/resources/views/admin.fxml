@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<TabPane prefWidth="950.0" prefHeight="600.0" styleClass="root" tabClosingPolicy="UNAVAILABLE"
+         xmlns="http://javafx.com/javafx/21" xmlns:fx="http://fxml.com/fxml/1" 
+         fx:controller="com.autosur.controllers.AdminController">
+    <tabs>
+        <Tab text="Gestión de Tareas">
+            <BorderPane>
+                <top>
+                    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #2c3e50; -fx-padding: 10px;">
+                        <Label text="Buscar:"/>
+                        <TextField fx:id="txtSearchTask" promptText="Buscar tarea..." onKeyReleased="#handleSearchTask"/> 
+                        <Label text="Filtrar:"/>
+                        <ComboBox fx:id="cmbFilterStatus" onAction="#handleFilterTasks"/> [cite: 46]
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Cerrar Sesión" onAction="#handleLogout" styleClass="button-delete"/>
+                    </HBox>
+                </top>
+                <center>
+                    <SplitPane dividerPositions="0.65">
+                        <items>
+                            <TableView fx:id="tableTasks" onMouseClicked="#handleSelectTask"> [cite: 36, 44, 45]
+                                <columns>
+                                    <TableColumn fx:id="colTaskId" text="ID" prefWidth="40"/>
+                                    <TableColumn fx:id="colTaskTitle" text="Título" prefWidth="130"/>
+                                    <TableColumn fx:id="colTaskDesc" text="Descripción" prefWidth="200"/>
+                                    <TableColumn fx:id="colTaskMech" text="Mecánico" prefWidth="110"/>
+                                    <TableColumn fx:id="colTaskStatus" text="Estado" prefWidth="100"/>
+                                </columns>
+                            </TableView>
+                            
+                            <VBox spacing="10.0">
+                                <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                                <Label text="Formulario de Tarea" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                                <Label text="Título:"/>
+                                <TextField fx:id="txtTaskTitle"/> [cite: 30]
+                                <Label text="Descripción:"/>
+                                <TextArea fx:id="txtTaskDesc" prefHeight="80"/> [cite: 32]
+                                <Label text="Mecánico Responsable:"/>
+                                <ComboBox fx:id="cmbTaskMech" maxWidth="Infinity"/> [cite: 33]
+                                <Label text="Estado:"/>
+                                <ComboBox fx:id="cmbTaskStatus" maxWidth="Infinity"/>
+                                
+                                <HBox spacing="10" style="-fx-padding-top: 10px;">
+                                    <Button text="Guardar" onAction="#handleSaveTask" prefWidth="90"/> [cite: 15, 17]
+                                    <Button text="Eliminar" onAction="#handleDeleteTask" styleClass="button-delete" prefWidth="90"/> [cite: 18, 43]
+                                    <Button text="Limpiar" onAction="#handleClearTaskForm" prefWidth="70"/>
+                                </HBox>
+                            </VBox>
+                        </items>
+                    </SplitPane>
+                </center>
+            </BorderPane>
+        </Tab>
+        
+        <Tab text="Gestión de Empleados">
+            <Padding><Insets top="10" right="10" bottom="10" left="10"/></Padding>
+            <SplitPane dividerPositions="0.6">
+                <items>
+                    <TableView fx:id="tableEmployees" onMouseClicked="#handleSelectEmployee">
+                        <columns>
+                            <TableColumn fx:id="colEmpId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colEmpUser" text="Nombre de Usuario" prefWidth="250"/>
+                        </columns>
+                    </TableView>
+                    
+                    <VBox spacing="10.0">
+                        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+                        <Label text="Registrar Mecánico" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <Label text="Usuario:"/>
+                        <TextField fx:id="txtEmpUser"/>
+                        <Label text="Contraseña:"/>
+                        <PasswordField fx:id="txtEmpPass"/>
+                        
+                        <HBox spacing="10" style="-fx-padding-top: 10px;">
+                            <Button text="Crear" onAction="#handleCreateEmployee" prefWidth="100"/> [cite: 20, 48]
+                            <Button text="Eliminar" onAction="#handleDeleteEmployee" styleClass="button-delete" prefWidth="100"/> [cite: 21, 48]
+                        </HBox>
+                    </VBox>
+                </items>
+            </SplitPane>
+        </Tab>
+    </tabs>
+</TabPane>

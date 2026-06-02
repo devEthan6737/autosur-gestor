@@ -1,0 +1,61 @@
+.root {
+    -fx-background-color: #1e222b;
+    -fx-font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+.label {
+    -fx-text-fill: #ecf0f1;
+}
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e67e22;
+}
+
+.text-field, .password-field, .combo-box, .text-area {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #34495e;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 6px;
+}
+.text-field:focused, .password-field:focused, .combo-box:focused {
+    -fx-border-color: #e67e22;
+}
+
+.button {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.button:hover {
+    -fx-background-color: #d35400;
+}
+.button-delete {
+    -fx-background-color: #c0392b;
+}
+.button-delete:hover {
+    -fx-background-color: #962d22;
+}
+
+.table-view {
+    -fx-background-color: #2c3e50;
+    -fx-border-color: #34495e;
+    -fx-background-radius: 4px;
+}
+.table-view .column-header {
+    -fx-background-color: #34495e;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+.table-view .table-cell {
+    -fx-text-fill: #ffffff;
+}
+.table-row-cell:selected {
+    -fx-background-color: #e67e22;
+}
