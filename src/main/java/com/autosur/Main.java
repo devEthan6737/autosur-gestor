@@ -1,11 +1,11 @@
-package main.java.com.autosur;
+package com.autosur;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import main.java.com.autosur.database.DatabaseConnection;
+import com.autosur.database.DatabaseConnection;
 
 import java.io.IOException;
 

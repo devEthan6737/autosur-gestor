@@ -1,4 +1,4 @@
-package main.java.com.autosur.models;
+package com.autosur.models;
 
 public class User {
     public enum Role {

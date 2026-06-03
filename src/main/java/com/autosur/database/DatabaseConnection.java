@@ -1,4 +1,4 @@
-package main.java.com.autosur.database;
+package com.autosur.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,9 +36,9 @@ public class DatabaseConnection {
 
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users;");
             if (rs.next() && rs.getInt(1) == 0) {
-                stmt.execute("INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'ADMINISTRADOR');");
-                stmt.execute("INSERT INTO users (username, password, role) VALUES ('pepe', 'pepe123', 'EMPLEADO');");
-                stmt.execute("INSERT INTO users (username, password, role) VALUES ('juan', 'juan123', 'EMPLEADO');");
+                stmt.execute("INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'ADMIN');");
+                stmt.execute("INSERT INTO users (username, password, role) VALUES ('user', 'user123', 'EMPLOYEE');");
+                stmt.execute("INSERT INTO users (username, password, role) VALUES ('juan', 'juan123', 'EMPLOYEE');");
 
                 stmt.execute("INSERT INTO tasks (title, description, user_id, status) VALUES ('Cambio de Aceite', 'Seat Ibiza filtro y aceite', 2, 'Pendiente');");
                 stmt.execute("INSERT INTO tasks (title, description, user_id, status) VALUES ('Cambiar Pastillas', 'Frenos delanteros rotos', 3, 'En progreso');");

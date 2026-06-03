@@ -1,10 +1,10 @@
-package main.java.com.autosur.models;
+package com.autosur.models;
 
 public class Task {
     public enum Status {
-        Pending("Pending"),
-        InProgress("In Progress"),
-        Complete("Complete");
+        Pending("Pendiente"),
+        InProgress("En progreso"),
+        Complete("Completada");
 
         private final String value;
         Status(String value) {
@@ -16,10 +16,13 @@ public class Task {
         }
 
         public static Status fromString(String text) {
+            if (text == null) throw new IllegalArgumentException("El estado no puede ser nulo");
             for (Status b : Status.values()) {
-                if (b.value.equalsIgnoreCase(text)) return b;
+                if (b.value.equalsIgnoreCase(text.trim()) || b.name().equalsIgnoreCase(text.trim())) {
+                    return b;
+                }
             }
-            throw new IllegalArgumentException("Estado desconocido: " + text);
+            throw new IllegalArgumentException("Estado desconocido en AutoSur: " + text);
         }
     }
 

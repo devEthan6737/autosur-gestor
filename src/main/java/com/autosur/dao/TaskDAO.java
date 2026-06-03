@@ -1,11 +1,11 @@
-package main.java.com.autosur.dao;
+package com.autosur.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.autosur.database.DatabaseConnection;
-import main.java.com.autosur.models.Task;
+import com.autosur.database.DatabaseConnection;
+import com.autosur.models.Task;
 
 public class TaskDAO {
 

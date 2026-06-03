@@ -1,11 +1,11 @@
-package main.java.com.autosur.dao;
+package com.autosur.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.autosur.database.DatabaseConnection;
-import main.java.com.autosur.models.User;
+import com.autosur.database.DatabaseConnection;
+import com.autosur.models.User;
 
 public class UserDAO {
 
@@ -62,7 +62,7 @@ public class UserDAO {
 
     public List<User> getAllEmployees() {
         List<User> employees = new ArrayList<>();
-        String query = "SELECT * FROM users WHERE role = 'EMPLEADO';";
+        String query = "SELECT * FROM users WHERE role = 'EMPLOYEE';";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
