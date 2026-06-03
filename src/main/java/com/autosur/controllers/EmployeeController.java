@@ -40,40 +40,40 @@ public class EmployeeController {
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        cmbFilterStatus.setItems(FXCollections.observableArrayList("Todos", "Pendiente", "En progreso", "Completada")); [cite: 26, 46]
+        cmbFilterStatus.setItems(FXCollections.observableArrayList("Todos", "Pendiente", "En progreso", "Completada"));
         cmbFilterStatus.getSelectionModel().selectFirst();
         
-        cmbChangeStatus.setItems(FXCollections.observableArrayList(Task.Status.values())); [cite: 37]
+        cmbChangeStatus.setItems(FXCollections.observableArrayList(Task.Status.values()));
 
         loadTasks();
     }
 
     private void loadTasks() {
         if (currentUser != null) {
-            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getTasksByEmployee(currentUser.getId()))); [cite: 24]
+            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getTasksByEmployee(currentUser.getId())));
         }
     }
 
     @FXML
-    public void handleFilter() { [cite: 26, 46]
+    public void handleFilter() {
         String filter = cmbFilterStatus.getValue();
         if (filter == null || filter.equals("Todos")) {
             loadTasks();
         } else {
             Task.Status status = Task.Status.fromString(filter);
-            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getTasksWithFilter(status, currentUser.getId()))); [cite: 26]
+            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getTasksWithFilter(status, currentUser.getId())));
         }
     }
 
     @FXML
-    public void handleSearch() { [cite: 47]
+    public void handleSearch() {
         String query = txtSearch.getText().trim();
-        tableTasks.setItems(FXCollections.observableArrayList(taskDAO.searchTasksByName(query, currentUser.getId()))); [cite: 47]
+        tableTasks.setItems(FXCollections.observableArrayList(taskDAO.searchTasksByName(query, currentUser.getId())));
     }
 
     @FXML
-    public void handleUpdateStatus() { [cite: 25, 37]
-        Task selectedTask = tableTasks.getSelectionModel().getSelectedItem(); [cite: 45]
+    public void handleUpdateStatus() {
+        Task selectedTask = tableTasks.getSelectionModel().getSelectedItem();
         Task.Status newStatus = cmbChangeStatus.getValue();
 
         if (selectedTask == null || newStatus == null) {
@@ -81,7 +81,7 @@ public class EmployeeController {
             return;
         }
 
-        if (taskDAO.updateTaskStatus(selectedTask.getId(), newStatus)) { [cite: 25, 37]
+        if (taskDAO.updateTaskStatus(selectedTask.getId(), newStatus)) {
             loadTasks();
             showAlert("Éxito", "Estado actualizado correctamente.", Alert.AlertType.INFORMATION);
         }

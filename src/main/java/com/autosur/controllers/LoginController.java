@@ -31,7 +31,7 @@ public class LoginController {
             return;
         }
 
-        User user = userDAO.login(username, password); [cite: 61]
+        User user = userDAO.login(username, password);
 
         if (user != null) {
             loggedUser = user;
@@ -42,8 +42,8 @@ public class LoginController {
     }
 
     private void navigateToDashboard(User.Role role) {
-        String fxmlFile = (role == User.Role.ADMINISTRADOR) ? "/views/admin.fxml" : "/views/employee.fxml"; [cite: 12]
-        String windowTitle = (role == User.Role.ADMINISTRADOR) ? "AutoSur - Panel de Administración" : "AutoSur - Panel de Mecánico";
+        String fxmlFile = (role == User.Role.ADMIN) ? "/views/admin.fxml" : "/views/employee.fxml";
+        String windowTitle = (role == User.Role.ADMIN) ? "AutoSur - Panel de Administración" : "AutoSur - Panel de Mecánico";
 
         try {
             Stage stage = (Stage) txtUsername.getScene().getWindow();

@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminController {
     @FXML private TableView<Task> tableTasks;
@@ -40,63 +42,109 @@ public class AdminController {
 
     @FXML
     public void initialize() {
+        // Columnas de Tareas
         colTaskId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTaskTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colTaskDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
         colTaskMech.setCellValueFactory(new PropertyValueFactory<>("assignedUsername"));
         colTaskStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
+        // Columnas de Empleados
         colEmpId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colEmpUser.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        cmbFilterStatus.setItems(FXCollections.observableArrayList("Todos", "Pendiente", "En progreso", "Completada")); [cite: 46]
+        // Combos de Estado
+        cmbFilterStatus.setItems(FXCollections.observableArrayList("Todos", "Pendiente", "En progreso", "Completada"));
         cmbFilterStatus.getSelectionModel().selectFirst();
         cmbTaskStatus.setItems(FXCollections.observableArrayList(Task.Status.values()));
+
+        // Formateador visual de los mecánicos para que no salga el puntero de memoria en blanco
+        cmbTaskMech.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(User item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item.getUsername());
+                    setStyle("-fx-text-fill: white;"); // Fuerza el color de la letra
+                }
+            }
+        });
+        cmbTaskMech.setButtonCell(cmbTaskMech.getCellFactory().call(null));
 
         refreshAll();
     }
 
-    private void refreshAll() {
-        tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getAllTasks())); [cite: 16, 36]
-        tableEmployees.setItems(FXCollections.observableArrayList(userDAO.getAllEmployees()));
-        cmbTaskMech.setItems(FXCollections.observableArrayList(userDAO.getAllEmployees())); [cite: 19]
-        handleClearTaskForm();
+private void refreshAll() {
+    List<User> employees = userDAO.getAllEmployees();
+    if (employees == null) {
+        employees = new ArrayList<>();
     }
 
+    System.out.println("\n[AutoSur-DATABASE-DEBUG] -> Empleados devueltos por la Query del DAO: " + employees.size());
+
+    if (employees.isEmpty()) {
+        System.out.println("[AutoSur-DATABASE-DEBUG] -> Alerta: El DAO no encuentra empleados en el archivo .db.");
+
+    }
+    // Cargar tablas y combos con lo que realmente devuelve el DAO
+    tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getAllTasks()));
+    tableEmployees.setItems(FXCollections.observableArrayList(employees));
+    cmbTaskMech.setItems(FXCollections.observableArrayList(employees));
+
+    selectedTask = null;
+    txtTaskTitle.clear();
+    txtTaskDesc.clear();
+    cmbTaskMech.setValue(null);
+    cmbTaskStatus.setValue(Task.Status.Pending);
+    tableTasks.getSelectionModel().clearSelection();
+
+    selectedEmployee = null;
+    txtEmpUser.clear();
+    txtEmpPass.clear();
+    tableEmployees.getSelectionModel().clearSelection();
+}
+
     @FXML
-    public void handleFilterTasks() { [cite: 46]
+    public void handleFilterTasks() {
         String filter = cmbFilterStatus.getValue();
         if (filter == null || filter.equals("Todos")) {
-            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getAllTasks())); [cite: 36]
+            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getAllTasks()));
         } else {
-            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getTasksWithFilter(Task.Status.fromString(filter), null))); [cite: 69]
+            tableTasks.setItems(FXCollections.observableArrayList(taskDAO.getTasksWithFilter(Task.Status.fromString(filter), null)));
         }
     }
 
     @FXML
-    public void handleSearchTask() { [cite: 47]
-        tableTasks.setItems(FXCollections.observableArrayList(taskDAO.searchTasksByName(txtSearchTask.getText().trim(), null))); [cite: 47]
+    public void handleSearchTask() {
+        tableTasks.setItems(FXCollections.observableArrayList(taskDAO.searchTasksByName(txtSearchTask.getText().trim(), null)));
     }
 
     @FXML
-    public void handleSelectTask() { [cite: 45]
-        selectedTask = tableTasks.getSelectionModel().getSelectedItem(); [cite: 45]
+    public void handleSelectTask() {
+        selectedTask = tableTasks.getSelectionModel().getSelectedItem();
         if (selectedTask != null) {
             txtTaskTitle.setText(selectedTask.getTitle());
             txtTaskDesc.setText(selectedTask.getDescription());
             cmbTaskStatus.setValue(selectedTask.getStatus());
 
-            for (User u : cmbTaskMech.getItems()) {
-                if (u.getId() == selectedTask.getAssignedUserId()) {
-                    cmbTaskMech.setValue(u);
-                    break;
-                }
+            User matchedMechanic = cmbTaskMech.getItems().stream()
+                .filter(user -> user.getId() == selectedTask.getAssignedUserId())
+                .findFirst()
+                .orElse(null);
+
+            if (matchedMechanic != null) {
+                cmbTaskMech.setValue(matchedMechanic);
+            } else {
+                cmbTaskMech.setValue(null);
             }
         }
     }
 
     @FXML
-    public void handleSaveTask() { [cite: 15, 17]
+    public void handleSaveTask() {
         String title = txtTaskTitle.getText().trim();
         String desc = txtTaskDesc.getText().trim();
         User mech = cmbTaskMech.getValue();
@@ -108,30 +156,26 @@ public class AdminController {
         }
 
         if (selectedTask == null) {
-            Task newTask = new Task(title, desc, mech.getId(), status); [cite: 29]
-            taskDAO.createTask(newTask); [cite: 64]
+            Task newTask = new Task(title, desc, mech.getId(), status);
+            taskDAO.createTask(newTask);
         } else {
             Task updated = new Task(selectedTask.getId(), title, desc, mech.getId(), mech.getUsername(), status);
-            taskDAO.updateTaskFull(updated); [cite: 70]
+            taskDAO.updateTaskFull(updated);
         }
         refreshAll();
     }
 
     @FXML
-    public void handleDeleteTask() { [cite: 18, 43]
+    public void handleDeleteTask() {
         if (selectedTask != null) {
-            taskDAO.deleteTask(selectedTask.getId()); [cite: 18, 65]
+            taskDAO.deleteTask(selectedTask.getId());
             refreshAll();
         }
     }
 
     @FXML
     public void handleClearTaskForm() {
-        selectedTask = null;
-        txtTaskTitle.clear();
-        txtTaskDesc.clear();
-        cmbTaskMech.getSelectionModel().clearSelection();
-        cmbTaskStatus.setValue(Task.Status.PENDIENTE); [cite: 35]
+        refreshAll();
     }
 
     @FXML
@@ -139,11 +183,12 @@ public class AdminController {
         selectedEmployee = tableEmployees.getSelectionModel().getSelectedItem();
         if (selectedEmployee != null) {
             txtEmpUser.setText(selectedEmployee.getUsername());
+            txtEmpPass.clear();
         }
     }
 
     @FXML
-    public void handleCreateEmployee() { [cite: 20, 48]
+    public void handleCreateEmployee() {
         String user = txtEmpUser.getText().trim();
         String pass = txtEmpPass.getText().trim();
 
@@ -152,22 +197,19 @@ public class AdminController {
             return;
         }
 
-        User newEmp = new User(user, pass, User.Role.EMPLEADO);
-        if (userDAO.createUser(newEmp)) { [cite: 20, 66]
-            txtEmpUser.clear();
-            txtEmpPass.clear();
-            refreshAll();
+        User newEmp = new User(user, pass, User.Role.EMPLOYEE);
+        if (userDAO.createUser(newEmp)) {
+            System.out.println("[AutoSur-DEBUG] -> Empleado '" + user + "' creado con éxito en BD.");
+            refreshAll(); // Ahora refrescará la lista real incluyendo al nuevo usuario
         } else {
             showAlert("Error", "No se pudo crear el usuario (puede que ya exista).", Alert.AlertType.ERROR);
         }
     }
 
     @FXML
-    public void handleDeleteEmployee() { [cite: 21, 48]
+    public void handleDeleteEmployee() {
         if (selectedEmployee != null) {
-            userDAO.deleteUser(selectedEmployee.getId()); [cite: 21, 67]
-            selectedEmployee = null;
-            txtEmpUser.clear();
+            userDAO.deleteUser(selectedEmployee.getId());
             refreshAll();
         }
     }
